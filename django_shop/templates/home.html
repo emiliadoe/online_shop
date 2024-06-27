@@ -14,7 +14,7 @@
 
         {% block logged_in_content %}
             <h2>Hi {{ user.username }}!</h2>
-            <p><a href="{% url 'overview-list' %}">Show me all products</a></p>
+            <p><a href="{% url 'overview' %}">Show me all products</a></p>
             <p><a href="{% url 'myuser-list' %}">Show me the users</a></p>
             <a href="{% url 'logout' %}">Logout</a>
         {% endblock %}

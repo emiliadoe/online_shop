@@ -1,0 +1,64 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% endblock %}
+
+{% block title %}World of Sweets{% endblock %}
+    
+{% block content %}
+
+<header>
+<nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+</nav>
+</header>
+        <h1>World of Sweets</h1>
+      
+        <main>
+            <section class="product-list">
+                <div class="product">
+                    <img src="path/to/image1.jpg" alt="Product 1">
+                    <h2>Product 1</h2>
+                    <p class="description">Description of product 1.</p>
+                    <p class="price">$10.00</p>
+                </div>
+                <div class="product">
+                    <img src="path/to/image2.jpg" alt="Product 2">
+                    <h2>Product 2</h2>
+                    <p class="description">Description of product 2.</p>
+                    <p class="price">$20.00</p>
+                </div>
+                <!-- Repeat for more products -->
+            </section>
+        </main>
+    
+        <footer>
+            <p>&copy; 2024 World of Sweets</p>
+        </footer>
+
+
+
+       <!--  <section class="products">
+            <h2>Products</h2>
+            <div class="product-list">
+                {% for product in products %}
+                    <div class="product">
+                                               <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <p>{{ product.price }} €</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section> -->
+        {% endblock %}
+
+
+
+

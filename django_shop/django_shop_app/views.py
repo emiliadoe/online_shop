@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect
-from .models import Product, Rating
+from .models import Product, Rating, Category
 from .forms import RatingForm, ProductForm
 
 
+
 def overview_list(request):
-
-    all_products = Product.objects.all()  # fetch all housings objects in a QuerySet data type
-
-    context = {'all_products': all_products}
-
-    return render(request, 'overview-list.html', context)
+    products = Product.objects.all()
+    context = {'all_products': products}
+    return render(request, 'overview.html', context)
 
 
 def rate(request, pk: str, up_or_down: str):
@@ -24,25 +22,25 @@ def rate(request, pk: str, up_or_down: str):
 
 def product_detail(request, **kwargs):
 
-    housing_id = kwargs['pk']  # pk refers to "primary key"
+    product_id = kwargs['pk']  # pk refers to "primary key"
     current_product = Product.objects.get(id=product_id)  # fetch the single housing that is requested
     current_user = request.user
 
     # COMMENTS
     if request.method == 'POST':
-        comment_form = RatingForm(request.POST)
-        comment_form.instance.user = current_user
-        comment_form.instance.product = current_product
+        rating_form = RatingForm(request.POST)
+        rating_form.instance.user = current_user
+        rating_form.instance.product = current_product
 
-        if comment_form.is_valid():
-            comment_form.save()
+        if rating_form.is_valid():
+            rating_form.save()
         else:
-            print(comment_form.errors)
+            print(rating_form.errors)
 
     ratings = Rating.objects.filter(holiday_housing=current_product)
 
     context = {
-        'single_housing': current_product,
+        'single_product': current_product,
         'ratings_on_the_product': ratings,
         'rating_form': RatingForm
     }

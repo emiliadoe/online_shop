@@ -7,7 +7,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
 
-        fields = ['title', 'type', 'price']
+        fields = ['title', 'category', 'price']
 
         widgets = {
             'type': forms.Select(choices=Product.TYPE),
