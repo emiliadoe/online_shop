@@ -19,9 +19,11 @@ from django.urls import path
 from . import views
 
 
+"""    path('', views.overview_list, name='overview-list'),
+ """
+
 urlpatterns = [
-    path('show/', views.overview_list, name='overview-list'),
-    path('show/<int:pk>/', views.product_detail, name='product-detail'),
-    path('show/<int:pk>/vote/<str:up_or_down>/', views.rate, name='product-rating'),
-    path('add/', views.product_create, name='product-create')
+    path('', views.overview_list, name='overview'),
+    path('<int:pk>/', views.product_detail, name='product-detail'),
+    path('<int:pk>/vote/<str:up_or_down>/', views.rate, name='product-rating'),
 ]

@@ -1,79 +1,59 @@
 {% extends 'home.html' %}
 {% load static %}
-{% block title %}Movie detail{% endblock %}
+{% block title %}Product detail{% endblock %}
 
 {% block content %}
-    <h2>Movie detail</h2>
+    <h2>Product detail</h2>
 
     <table>
         <tr>
             <td><b>Title:</b></td>
-            <td>{{ one_movie.title }}<br></td>
+            <td>{{ single_product.title }}<br></td>
         </tr>
         <tr>
             <td><b>Regisseur:</b></td>
-            <td>{{ one_movie.regisseur }}<br></td>
+            <td>{{ single_product.regisseur }}<br></td>
         </tr>
         <tr>
             <td><b>Short Summary:</b></td>
-            <td><p>{{ one_movie.summary }}</p><br></td>
+            <td><p>{{ single_product.summary }}</p><br></td>
         </tr>
         <tr>
             <td><b>Type:</b></td>
-            <td>{{ one_movie.get_type_display }}<br></td>
+            <td>{{ single_product.get_type_display }}<br></td>
         </tr>
         <tr>
             <td><b>FSK:</b></td>
-            <td>{{ one_movie.fsk }}<br></td>
+            <td>{{ single_product.fsk }}<br></td>
         </tr>
         <tr>
             <td><b>Date added:</b></td>
-            <td>{{ one_movie.date }}<br></td>
+            <td>{{ single_product.date }}<br></td>
         </tr>
-        <tr>
-            <td><b>Entered by:</b></td>
-            <td>{{ one_movie.user }}<br></td>
-        </tr>
+
     </table>
 
     
-<h2>Comments</h2>
+<h2>Ratings</h2>
 
-{% for comment in comments_on_the_movie %}
+{% for ratings in ratings_on_the_product %}
     <div>
-        <p class="comment-meta">{{ comment.user.username }} on {{ comment.timestamp }}</p>
-        <p class="comment">{{ comment.text }}</p>
+        <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
+        <p class="rating">{{ rating.text }}</p>
     </div>
-    <div class="votes">
-
-        <span class="green">{{ comment.upvotes }}</span>
-        <a href="{% url 'comment-vote' one_movie.id 'up' %}">
-            <img src="{% static 'images/arrow_up.png' %}">
-         </a>
-
-         &nbsp;&nbsp;&nbsp;
-
-         <span class="red">{{ comment.downvotes }}</span>
-         <a href="{% url 'comment-vote' one_movie.id 'down' %}">
-             <img src="{% static 'images/arrow_down.png' %}">
-         </a>
-    </div> 
 {% endfor %}
 
 
 <br>
 
 {#    Add new Comments #}
-<p>Leave a comment here!</p>
+<p>Rate this product!</p>
 <form method="POST">
     {% csrf_token %}
-    {{ comment_form.as_p }}
-    <button type="submit">Add comment</button>
+    {{ rating_form.as_p }}
+    <button type="submit">Add Rating</button>
 </form>
 
     <br>
-    <button class="button" role="button"> <a href="{% url 'movie-list' %}">Back to all movies</a></button>
-    <br>
-    <button class="button" role="button"><a href="{% url 'movie-delete' one_movie.id %}">Delete this movie</a></button>
-    <br>
+    <button class="button" role="button"> <a href="{% url 'overview' %}">Back to all Products</a></button>
 {% endblock %}

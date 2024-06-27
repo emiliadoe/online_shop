@@ -18,14 +18,14 @@ class Product(models.Model):
         ('B', 'bonbons')
     ]
 
-    type = models.CharField(
+    category = models.CharField(
         max_length=1,
         choices=TYPE
     )
 
     title = models.CharField(max_length=50)
 
-    price= models.FloatField()
+    price= models.DecimalField(max_digits=10, decimal_places=2)
 
     description = models.CharField(max_length=200)
 
@@ -54,6 +54,13 @@ class Rating(models.Model):
 
     def __repr__(self):
         return f'{self.get_comment_excerpt()} ({self.user.username} / {str(self.timestamp)})'
+    
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 """ 
 class Vote(models.Model):
