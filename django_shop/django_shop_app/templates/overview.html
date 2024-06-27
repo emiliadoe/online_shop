@@ -9,7 +9,7 @@
     
 {% block content %}
 
-<header>
+<!-- <header>
 <nav>
     <ul>
         <li><a href="#">Home</a></li>
@@ -17,20 +17,27 @@
         <li><a href="#">Contact</a></li>
     </ul>
 </nav>
-</header>
+</header> -->
+
         <h1>World of Sweets</h1>
       
         <main>
             <section class="product-list">
+
                 <div class="product">
-                    <img src="path/to/image1.jpg" alt="Product 1">
+                    <a href="{{ product.id }}">
+                    <img src="{% static 'images/hitschies.jpg' %}" alt="Product 1">
                     <h2>Product 1</h2>
+                </a>
                     <p class="description">Description of product 1.</p>
                     <p class="price">$10.00</p>
+
                 </div>
                 <div class="product">
-                    <img src="path/to/image2.jpg" alt="Product 2">
+                    <a href="{{ product.id }}">
+                    <img src="{% static 'images/fussball.jpg' %}"  alt="Product 2">
                     <h2>Product 2</h2>
+                    </a>
                     <p class="description">Description of product 2.</p>
                     <p class="price">$20.00</p>
                 </div>
@@ -44,7 +51,9 @@
 
 
 
-       <!--  <section class="products">
+       <!-- 
+       
+       <section class="products">
             <h2>Products</h2>
             <div class="product-list">
                 {% for product in products %}

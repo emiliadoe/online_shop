@@ -29,6 +29,8 @@ class Product(models.Model):
 
     description = models.CharField(max_length=200)
 
+    image = models.ImageField(upload_to='product_images', blank=True, null=True)
+
 
 class Rating(models.Model):
 
