@@ -22,7 +22,32 @@
         <h1>World of Sweets</h1>
       
         <main>
-            <section class="product-list">
+            <section class="products">
+                <h2>Products</h2>
+                <div class="product-list">
+                    {% for product in all_products %}
+                        <div class="product">
+                            <a href="{{ product.id }}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            <h3>{{ product.name }}</h3>
+                        </a>
+                            <p>{{ product.description }}</p>
+                            <p>{{ product.price }} €</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section> 
+        </main>
+    
+        <footer>
+            <p>&copy; 2024 World of Sweets</p>
+        </footer>
+
+
+
+       <!-- 
+       
+                 <section class="product-list">
 
                 <div class="product">
                     <a href="{{ product.id }}">
@@ -41,30 +66,7 @@
                     <p class="description">Description of product 2.</p>
                     <p class="price">$20.00</p>
                 </div>
-                <!-- Repeat for more products -->
-            </section>
-        </main>
-    
-        <footer>
-            <p>&copy; 2024 World of Sweets</p>
-        </footer>
-
-
-
-       <!-- 
-       
-       <section class="products">
-            <h2>Products</h2>
-            <div class="product-list">
-                {% for product in products %}
-                    <div class="product">
-                                               <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                        <h3>{{ product.name }}</h3>
-                        <p>{{ product.description }}</p>
-                        <p>{{ product.price }} €</p>
-                    </div>
-                {% endfor %}
-            </div>
+             Repeat for more products 
         </section> -->
         {% endblock %}
 

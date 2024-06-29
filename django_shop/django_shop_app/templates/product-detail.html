@@ -3,7 +3,7 @@
 {% block title %}Product detail{% endblock %}
 
 {% block content %}
-    <h2>Product detail</h2>
+    <h2>{{ single_product.title }}</h2>
 
     <table>
         <tr>
@@ -11,27 +11,27 @@
             <td>{{ single_product.title }}<br></td>
         </tr>
         <tr>
-            <td><b>Regisseur:</b></td>
-            <td>{{ single_product.regisseur }}<br></td>
+            <td><b>Price:</b></td>
+            <td>{{ single_product.price }} €<br></td>
         </tr>
         <tr>
-            <td><b>Short Summary:</b></td>
-            <td><p>{{ single_product.summary }}</p><br></td>
+            <td><b>Description:</b></td>
+            <td><p>{{ single_product.description }}</p><br></td>
         </tr>
         <tr>
             <td><b>Type:</b></td>
             <td>{{ single_product.get_type_display }}<br></td>
         </tr>
-        <tr>
-            <td><b>FSK:</b></td>
-            <td>{{ single_product.fsk }}<br></td>
-        </tr>
+
         <tr>
             <td><b>Date added:</b></td>
             <td>{{ single_product.date }}<br></td>
         </tr>
 
     </table>
+
+    <a href="{% url 'add-to-cart' single_product.id %}" class="btn btn-primary">In den Warenkorb</a>
+    <a href="{% url 'cart-detail' %}">Zum Warenkorb</a>
 
     
 <h2>Ratings</h2>

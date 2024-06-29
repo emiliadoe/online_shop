@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
-from .models import Product, Rating, Category
-from .forms import RatingForm, ProductForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, Rating, CartItem
+from .forms import RatingForm
 
 
 
@@ -37,7 +37,7 @@ def product_detail(request, **kwargs):
         else:
             print(rating_form.errors)
 
-    ratings = Rating.objects.filter(holiday_housing=current_product)
+    ratings = Rating.objects.filter(product_id=current_product)
 
     context = {
         'single_product': current_product,
@@ -48,25 +48,35 @@ def product_detail(request, **kwargs):
     return render(request, 'product-detail.html', context)
 
 
-def product_create(request):
+def add_to_cart(request, pk):
+    product = get_object_or_404(Product, id=pk)
 
-    if request.method == 'POST':
+    # session - Sitzungen, um Daten zwischen Anfragen zu speichern
+    cart = request.session.get('cart', [])
+    for item in cart:
+        if item['product_id'] == product.id:
+            item['quantity'] += 1
+            break
+    else:
+        cart.append({'product_id': product.id, 'quantity': 1})
+    request.session['cart'] = cart
+    return redirect('cart-detail')
 
-        form_in_function_based_view = ProductForm(request.POST)
-        form_in_function_based_view.instance.user = request.user  # add also user to data
+def cart_detail(request):
+    cart = request.session.get('cart', [])
+    cart_items = []
+    total_price = 0
+    for item in cart:
+        product = get_object_or_404(Product, id=item['product_id'])
+        quantity = item['quantity']
+        total_price += product.price * quantity
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'total_price': product.price * quantity
+        })
 
-        if form_in_function_based_view.is_valid():
-            form_in_function_based_view.save()
-            # print('SAVED a new housing in DB')
-        else:
-            # print(form_in_function_based_view.errors)
-            pass
-
-        return redirect('overview-list')
-
-    else:  # request.method == 'GET'
-
-        form_in_my_function_based_view = ProductForm()
-        context = {'form': form_in_my_function_based_view}
-
-        return render(request, 'product-create.html', context)
+    context = {'cart_items': cart_items, 
+               'total_price': total_price}
+    
+    return render(request, 'cart-detail.html', context)
