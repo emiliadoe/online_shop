@@ -18,6 +18,11 @@ python -m venv venv
 - python3 -m venv venv
 - source venv/bin/activate
 
+
+super user: 
+admin 
+adminadmin1
+
 # Migrationen
 Um sicherzugehen, dass alle Migrationen aktuell sind:
 
