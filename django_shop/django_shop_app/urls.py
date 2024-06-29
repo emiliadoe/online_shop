@@ -26,4 +26,6 @@ urlpatterns = [
     path('', views.overview_list, name='overview'),
     path('<int:pk>/', views.product_detail, name='product-detail'),
     path('<int:pk>/vote/<str:up_or_down>/', views.rate, name='product-rating'),
+    path('add-to-cart/<int:pk>/', views.add_to_cart, name='add-to-cart'),
+    path('cart/', views.cart_detail, name='cart-detail'),
 ]

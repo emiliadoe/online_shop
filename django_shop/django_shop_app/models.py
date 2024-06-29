@@ -58,11 +58,12 @@ class Rating(models.Model):
         return f'{self.get_comment_excerpt()} ({self.user.username} / {str(self.timestamp)})'
     
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return self.name
+        return f"{self.quantity} x {self.product.name}"
 
 """ 
 class Vote(models.Model):
