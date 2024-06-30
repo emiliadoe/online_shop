@@ -28,4 +28,6 @@ urlpatterns = [
     path('<int:pk>/vote/<str:up_or_down>/', views.rate, name='product-rating'),
     path('add-to-cart/<int:pk>/', views.add_to_cart, name='add-to-cart'),
     path('cart/', views.cart_detail, name='cart-detail'),
+    path('search/', views.product_search, name='product-search'),
+
 ]

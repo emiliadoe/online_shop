@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Rating, CartItem
-from .forms import RatingForm
+from .forms import RatingForm, SearchForm
+from django.http import HttpResponse
+from django.db.models import Q
+
 
 
 
@@ -60,7 +63,7 @@ def add_to_cart(request, pk):
     else:
         cart.append({'product_id': product.id, 'quantity': 1})
     request.session['cart'] = cart
-    return redirect('cart-detail')
+    return HttpResponse('Product added to cart')
 
 def cart_detail(request):
     cart = request.session.get('cart', [])
@@ -80,3 +83,46 @@ def cart_detail(request):
                'total_price': total_price}
     
     return render(request, 'cart-detail.html', context)
+
+
+def product_search(request):
+
+    if request.method == 'POST':
+
+        search_title = request.POST['title']
+        search_description = request.POST['description']
+        search_rating = request.POST['ratings']
+        searched_rating = int(search_rating) if search_rating else 0
+
+
+        products_found = Product.objects.filter(
+            Q(title__contains=search_title)
+            & Q(description__contains=search_description)
+            & Q(ratings__gte=searched_rating)
+        )
+
+        # alternative:
+        # housings_found = (
+        #         HolidayHousing.objects.filter(title__contains=search_string_title)
+        #         & HolidayHousing.objects.filter(specials__contains=search_string_specials)
+        #         & HolidayHousing.objects.filter(rooms__gte=searched_rooms)
+        # )
+
+        form_in_function_based_view = SearchForm()
+
+        context = {
+            'show_search_results': True,
+            'form': form_in_function_based_view,
+            'products_found': products_found
+        }
+
+    else:  # GET
+
+        form_in_function_based_view = SearchForm()
+
+        context = {
+            'show_search_results': False,
+            'form': form_in_function_based_view,
+        }
+
+    return render(request, 'product-search.html', context)

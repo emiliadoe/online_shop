@@ -27,3 +27,13 @@ class RatingForm(forms.ModelForm):
             'product': forms.HiddenInput(),
         }
 
+class SearchForm(forms.ModelForm):
+
+    title = forms.CharField(required=False)
+    description = forms.CharField(required=False)
+    ratings = forms.IntegerField(required=False)
+
+    class Meta:
+        model = Product
+        fields = ['title', 'description', 'ratings']
+

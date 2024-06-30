@@ -7,19 +7,19 @@ from django.conf import settings
 class Product(models.Model):
 
     class Meta:
-        """ ordering = ['costs', 'type', 'location'] """
         verbose_name = 'Product'
         verbose_name_plural = 'Product'
 
     TYPE = [
-        ('S', 'schokolade'),
-        ('G', 'gummibaerchen'),
-        ('K', 'kaugummis'), 
-        ('B', 'bonbons')
+        ('S', 'Schokolade'),
+        ('G', 'Gummibaerchen'),
+        ('K', 'Kaugummis'), 
+        ('B', 'Bonbons'),
+        ('So', 'Sonstiges')
     ]
 
     category = models.CharField(
-        max_length=1,
+        max_length=2,
         choices=TYPE
     )
 
@@ -30,6 +30,9 @@ class Product(models.Model):
     description = models.CharField(max_length=200)
 
     image = models.ImageField(upload_to='product_images', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Rating(models.Model):
