@@ -34,11 +34,11 @@
                     {% for product in all_products %}
                         <div class="product">
                             <a href="{{ product.id }}">
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                            <h3>{{ product.name }}</h3>
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                            <h3 class="title">{{ product.title }}</h3>
                         </a>
-                            <p>{{ product.description }}</p>
-                            <p>{{ product.price }} €</p>
+                            <p class="description">{{ product.description }}</p>
+                            <p class="price">{{ product.price }} €</p>
                         </div>
                     {% endfor %}
                 </div>
