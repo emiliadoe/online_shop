@@ -7,7 +7,9 @@
 
     <table>
         <tr>
-            <td><b>Title:</b></td>
+            <td><img src="{{ single_product.image.url }}" alt="{{ single_product.name }}"><br></td>
+        </tr>
+        <tr>
             <td>{{ single_product.title }}<br></td>
         </tr>
         <tr>
@@ -23,15 +25,16 @@
             <td>{{ single_product.get_type_display }}<br></td>
         </tr>
 
-        <tr>
-            <td><b>Date added:</b></td>
-            <td>{{ single_product.date }}<br></td>
-        </tr>
 
     </table>
 
-    <a href="{% url 'add-to-cart' single_product.id %}" class="btn btn-primary">In den Warenkorb</a>
+    <button class="button" role="button"> 
+    <a href="{% url 'add-to-cart' single_product.id %}" >In den Warenkorb</a>
+    </button>
+    <button class="button" role="button"> 
     <a href="{% url 'cart-detail' %}">Zum Warenkorb</a>
+    </button>
+
 
     
 <h2>Ratings</h2>
