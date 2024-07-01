@@ -5,8 +5,6 @@ from django.http import HttpResponse
 from django.db.models import Q
 
 
-
-
 def overview_list(request):
     products = Product.objects.all()
     context = {'all_products': products}
@@ -91,14 +89,14 @@ def product_search(request):
 
         search_title = request.POST['title']
         search_description = request.POST['description']
-        search_rating = request.POST['ratings']
-        searched_rating = int(search_rating) if search_rating else 0
+        # search_rating = request.POST['rating']
+        # searched_rating = int(search_rating) if search_rating else 0
 
 
         products_found = Product.objects.filter(
             Q(title__contains=search_title)
             & Q(description__contains=search_description)
-            & Q(ratings__gte=searched_rating)
+            # & Q(ratings__gte=searched_rating)
         )
 
         # alternative:
