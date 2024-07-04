@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
@@ -6,6 +7,10 @@ from django.views.generic import ListView, UpdateView
 from .forms import RatingEditForm
 from django_shop_app.models import Rating
 from UserAdmin.models import MyUser
+
+
+def is_kundenservice(user):
+    return user.groups.filter(name='Kundenservice').exists() or user.is_superuser
 
 
 # class CommentDeleteView(LoginRequiredMixin, ListView):
@@ -54,6 +59,8 @@ class CommentEditView(UpdateView):
 
 
 # @staff_member_required(login_url='/useradmin/login/')
+@login_required
+@user_passes_test(is_kundenservice, login_url='/useradmin/login/')
 def comment_edit_delete(request, pk: str):
 
     comment_id = pk
