@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView
-from .forms import RatingEditForm
-from django_shop_app.models import Rating
+from .forms import ProductForm, RatingEditForm
+from django_shop_app.models import Product, Rating
 from UserAdmin.models import MyUser
 
 
@@ -13,6 +13,8 @@ def is_kundenservice(user):
     return user.groups.filter(name='Kundenservice').exists() or user.is_superuser
 
 
+
+    
 # class CommentDeleteView(LoginRequiredMixin, ListView):
 #     login_url = '/useradmin/login/'
 class CommentDeleteView(ListView):
@@ -97,3 +99,11 @@ def comment_edit_delete(request, pk: str):
         }
 
         return render(request, 'comment-edit-delete.html', context)
+
+
+class ProductEditView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'edit-product.html'
+    success_url = reverse_lazy('product-list')
+
