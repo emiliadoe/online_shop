@@ -3,7 +3,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView, UpdateView, CreateView
 from .forms import ProductForm, RatingEditForm
 from django_shop_app.models import Product, Rating
 from UserAdmin.models import MyUser
@@ -107,3 +107,8 @@ class ProductEditView(UpdateView):
     template_name = 'edit-product.html'
     success_url = reverse_lazy('product-list')
 
+class ProductAddView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'add-product.html'
+    success_url = reverse_lazy('product-list')
