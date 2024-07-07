@@ -105,10 +105,12 @@ class ProductEditView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'edit-product.html'
-    success_url = reverse_lazy('product-list')
+    success_url = reverse_lazy('overview')
 
 class ProductAddView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'add-product.html'
-    success_url = reverse_lazy('product-list')
+    success_url = reverse_lazy('overview')
+    
+    
