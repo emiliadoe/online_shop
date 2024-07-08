@@ -18,6 +18,6 @@ class RatingEditForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'title', 'price', 'description', 'image']
+        fields = ['category', 'title', 'price', 'description', 'image', 'pdf']
 
 
