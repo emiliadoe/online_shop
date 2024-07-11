@@ -13,7 +13,15 @@ def is_kundenservice(user):
     return user.groups.filter(name='Kundenservice').exists() or user.is_superuser
 
 
-
+@login_required
+def customer_service_view(request):
+    products = Product.objects.all()
+    ratings = Rating.objects.all() 
+    context = {
+        'products': products,
+        'ratings': ratings,  
+    }
+    return render(request, 'CustomerService/homeCustomerService.html', context)
     
 # class CommentDeleteView(LoginRequiredMixin, ListView):
 #     login_url = '/useradmin/login/'
