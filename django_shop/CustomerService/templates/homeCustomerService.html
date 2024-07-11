@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home_style.css' %}">
+{% endblock %}
+
+{% block title %}Customer Service{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% block logged_in_content %}
+            <p><a href="{% url 'add-product' %}">Add a product</a></p>
+            
+            <h3>Products</h3>
+            {% if products %}
+                {% for product in products %}
+                    <p><a href="{% url 'edit-product' product.pk %}">Edit {{ product.title }}</a></p>
+                {% endfor %}
+            {% else %}
+                <p>No products available.</p>
+            {% endif %}
+            
+            <h3>Comments</h3>
+            {% if comments %}
+                {% for comment in comments %}
+                    <p><a href="{% url 'comment-edit' comment.pk %}">Edit a comment</a></p>
+                    <p><a href="{% url 'comment-delete' comment.pk %}">Delete a comment</a></p>
+                {% endfor %}
+            {% else %}
+                <p>No comments available.</p>
+            {% endif %}
+            
+        {% endblock %}
+    {% else %}
+        {% block not_logged_in_content %}
+            <p>You are not authorized</p>
+            <a href="{% url 'login' %}">Login</a>
+            <br>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

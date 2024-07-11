@@ -2,11 +2,9 @@
 {% load static %}
 {% block title %}Product detail{% endblock %}
 
-
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endblock %}
-
+{% endblock %}
 
 {% block content %}
     <h2>{{ single_product.title }}</h2>
@@ -30,38 +28,43 @@
             <td><b>Type:</b></td>
             <td>{{ single_product.get_type_display }}<br></td>
         </tr>
-
-
+        <tr>
+            <td><b>PDF:</b></td>
+            <td>
+                {% if single_product.pdf %}
+                    <a href="{{ single_product.pdf.url }}">Download PDF</a>
+                {% else %}
+                    Keine PDF vorhanden
+                {% endif %}
+                <br>
+            </td>
+        </tr>
     </table>
 
     <button class="button" role="button"> 
-    <a href="{% url 'add-to-cart' single_product.id %}" >In den Warenkorb</a>
+        <a href="{% url 'add-to-cart' single_product.id %}">In den Warenkorb</a>
     </button>
     <button class="button" role="button"> 
-    <a href="{% url 'cart-detail' %}">Zum Warenkorb</a>
+        <a href="{% url 'cart-detail' %}">Zum Warenkorb</a>
     </button>
 
+    <h2>Ratings</h2>
 
-    
-<h2>Ratings</h2>
+    {% for rating in ratings_on_the_product %}
+        <div>
+            <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
+            <p class="rating">{{ rating.text }}</p>
+        </div>
+    {% endfor %}
 
-{% for ratings in ratings_on_the_product %}
-    <div>
-        <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
-        <p class="rating">{{ rating.text }}</p>
-    </div>
-{% endfor %}
+    <br>
 
-
-<br>
-
-{#    Add new Comments #}
-<p>Rate this product!</p>
-<form method="POST">
-    {% csrf_token %}
-    {{ rating_form.as_p }}
-    <button type="submit">Add Rating</button>
-</form>
+    <p>Rate this product!</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ rating_form.as_p }}
+        <button type="submit">Add Rating</button>
+    </form>
 
     <br>
     <button class="button" role="button"> <a href="{% url 'overview' %}">Back to all Products</a></button>

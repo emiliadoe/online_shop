@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}Produkt hinzufügen{% endblock %}
+
+{% block logged_in_content %}
+
+    <h2>Produkt hinzufügen</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Produkt hinzufügen</button>
+    </form>
+
+{% endblock %}

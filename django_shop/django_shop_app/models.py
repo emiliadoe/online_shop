@@ -31,6 +31,8 @@ class Product(models.Model):
 
     image = models.ImageField(upload_to='product_images', blank=True, null=True)
 
+    pdf = models.FileField(upload_to='product_pdfs', blank=True, null=True)
+    
     def __str__(self):
         return self.title
 
