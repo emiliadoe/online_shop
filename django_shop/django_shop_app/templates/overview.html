@@ -1,35 +1,32 @@
-{% extends 'home.html' %}
 {% load static %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% endblock %}
 
+    <title>
 {% block title %}World of Sweets{% endblock %}
-    
-{% block content %}
+</title>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Sweets Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'overview' %}">Produktübersicht</a></li>
+                <li><a href="{% url 'product-search' %}">Produktsuche</a></li>
+                <li><a href="{% url 'cart-detail' %}">Warenkorb</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<!-- <header>
-<nav>
-    <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-</nav>
-</header> -->
-
+    <main>
+    {% block content %}
         <h1>World of Sweets</h1>
-
-      <body>
-        <main>
             <br>
-            <a href="{% url 'product-search' %}">
-                Search for a product
-            </a>
-            <br>
+           
             <section class="products">
-                <h2>Products</h2>
                 <div class="product-list">
                     {% for product in all_products %}
                         <div class="product">
@@ -44,37 +41,15 @@
                 </div>
             </section> 
         </main>
-    </body>
-        <footer>
-            <p>&copy; 2024 World of Sweets</p>
-        </footer>
 
 
-
-       <!-- 
-       
-                 <section class="product-list">
-
-                <div class="product">
-                    <a href="{{ product.id }}">
-                    <img src="{% static 'images/hitschies.jpg' %}" alt="Product 1">
-                    <h2>Product 1</h2>
-                </a>
-                    <p class="description">Description of product 1.</p>
-                    <p class="price">$10.00</p>
-
-                </div>
-                <div class="product">
-                    <a href="{{ product.id }}">
-                    <img src="{% static 'images/fussball.jpg' %}"  alt="Product 2">
-                    <h2>Product 2</h2>
-                    </a>
-                    <p class="description">Description of product 2.</p>
-                    <p class="price">$20.00</p>
-                </div>
-             Repeat for more products 
-        </section> -->
         {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 World of Sweets</p>
+    </footer>
+</body>
 
 
 

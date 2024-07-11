@@ -1,26 +1,29 @@
-{% extends 'home.html' %}
+{% extends 'overview.html' %}
 {% load static %}
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 {% endblock %}
 
-{% block title %}Search Products{% endblock %}
+{% block title %}Produktsuche{% endblock %}
+
+
+{% block content %}
 
 {% block logged_in_content %}
 
-    <h1>Search Products</h1>
+    <h1>Produktsuche</h1>
 
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-            <button type="submit">Search</button>
+            <button type="submit">Suchen</button>
     </form>
     <br>
     <br>
 
     {% if show_search_results %}
-        <b>Products found:</b><br>
+        <b>Produkte suchen:</b><br>
 
         <ul>
             {% for product in products_found %}
@@ -28,7 +31,7 @@
                     <p><b>{{ product }}</b></p>
 
                     <a href="{% url 'product-detail' product.id %}">
-                        Show product
+                        Zeig das Produkt
                     </a>
                 </li>
             {% endfor %}
@@ -36,4 +39,5 @@
 
     {% endif %}
 
+{% endblock %}
 {% endblock %}

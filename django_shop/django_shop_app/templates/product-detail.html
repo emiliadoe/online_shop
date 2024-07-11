@@ -1,14 +1,15 @@
-{% extends 'home.html' %}
+{% extends "overview.html" %}
 {% load static %}
-{% block title %}Product detail{% endblock %}
 
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% endblock %}
 
+{% block title %}Product detail{% endblock %}
 
 {% block content %}
+<body>
     <h2>{{ single_product.title }}</h2>
 
     <table>
@@ -64,5 +65,6 @@
 </form>
 
     <br>
-    <button class="button" role="button"> <a href="{% url 'overview' %}">Back to all Products</a></button>
+
+</body>
 {% endblock %}
