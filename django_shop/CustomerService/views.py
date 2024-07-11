@@ -1,13 +1,31 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView
-from .forms import RatingEditForm
-from django_shop_app.models import Rating
+from django.views.generic import ListView, UpdateView, CreateView
+from .forms import ProductForm, RatingEditForm
+from django_shop_app.models import Product, Rating
 from UserAdmin.models import MyUser
 
 
+def is_kundenservice(user):
+    return user.groups.filter(name='Kundenservice').exists() or user.is_superuser
+
+
+class CustomerServiceView(ListView):
+    model = Product
+    template_name = 'homeCustomerService.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ratings'] = Rating.objects.all()
+        return context
+    
 # class CommentDeleteView(LoginRequiredMixin, ListView):
 #     login_url = '/useradmin/login/'
 class CommentDeleteView(ListView):
@@ -54,6 +72,8 @@ class CommentEditView(UpdateView):
 
 
 # @staff_member_required(login_url='/useradmin/login/')
+@login_required
+@user_passes_test(is_kundenservice, login_url='/useradmin/login/')
 def comment_edit_delete(request, pk: str):
 
     comment_id = pk
@@ -90,3 +110,18 @@ def comment_edit_delete(request, pk: str):
         }
 
         return render(request, 'comment-edit-delete.html', context)
+
+
+class ProductEditView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'edit-product.html'
+    success_url = reverse_lazy('overview')
+
+class ProductAddView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'add-product.html'
+    success_url = reverse_lazy('overview')
+    
+    

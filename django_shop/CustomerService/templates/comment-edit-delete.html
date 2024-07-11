@@ -1,22 +1,19 @@
 {% extends 'home.html' %}
 {% load static %}
 
-{% block title %}Comment edit delete{% endblock %}
+{% block title %}Comment Edit/Delete{% endblock %}
 
 {% block logged_in_content %}
 
-    <h2>Comment edit delete</h2>
+    <h2>Comment Edit/Delete</h2>
 
     {% if not has_delete_permission %}
-
         You are not authorized to edit or delete comments.<br><br>
-
     {% endif %}
 
-    {{ comment.myuser.username }} on {{ comment.timestamp }}<br>
+    {{ comment.user.username }} on {{ comment.timestamp }}<br>
 
     {% if has_delete_permission %}
-
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
@@ -24,11 +21,8 @@
             <button type="submit" name="edit">Edit</button>
             <button type="submit" name="delete">Delete</button>
         </form>
-
     {% else %}
-
         {{ comment.text }}<br>
-
     {% endif %}
 
 {% endblock %}

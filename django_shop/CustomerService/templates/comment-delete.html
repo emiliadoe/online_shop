@@ -1,18 +1,18 @@
 {% extends 'home.html' %}
 {% load static %}
 
-{% block title %}Comment delete{% endblock %}
+{% block title %}Comment Delete{% endblock %}
 
 {% block logged_in_content %}
 
-    <h2>Comment delete</h2>
+    <h2>Comment Delete</h2>
 
     {% if not has_delete_permission %}
         You are not authorized to delete comments.<br><br>
     {% endif %}
 
     {% for comment in all_comments %}
-        {{ comment.myuser.username }} on {{ comment.timestamp }}<br>
+        {{ comment.user.username }} on {{ comment.timestamp }}<br>
         {{ comment.text }}<br>
         ID: {{ comment.id }}<br>
 

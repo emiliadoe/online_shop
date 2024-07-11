@@ -1,0 +1,21 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}Product Edit{% endblock %}
+
+{% block logged_in_content %}
+
+    <h2>Product Edit</h2>
+
+
+    {{ product.name }}<br>
+    {{ product.description }}<br>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save changes</button>
+        </form>
+    
+
+{% endblock %}
