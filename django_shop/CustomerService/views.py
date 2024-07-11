@@ -13,15 +13,18 @@ def is_kundenservice(user):
     return user.groups.filter(name='Kundenservice').exists() or user.is_superuser
 
 
-@login_required
-def customer_service_view(request):
-    products = Product.objects.all()
-    ratings = Rating.objects.all() 
-    context = {
-        'products': products,
-        'ratings': ratings,  
-    }
-    return render(request, 'CustomerService/homeCustomerService.html', context)
+class CustomerServiceView(ListView):
+    model = Product
+    template_name = 'homeCustomerService.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ratings'] = Rating.objects.all()
+        return context
     
 # class CommentDeleteView(LoginRequiredMixin, ListView):
 #     login_url = '/useradmin/login/'
