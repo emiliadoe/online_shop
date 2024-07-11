@@ -24,7 +24,7 @@ def rate(request, pk: str, up_or_down: str):
 def product_detail(request, **kwargs):
 
     product_id = kwargs['pk']  # pk refers to "primary key"
-    current_product = Product.objects.get(id=product_id)  # fetch the single housing that is requested
+    current_product = Product.objects.get(id=product_id) 
     current_user = request.user
 
     # COMMENTS
@@ -51,6 +51,7 @@ def product_detail(request, **kwargs):
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
+    current_user = request.user
 
     # session - Sitzungen, um Daten zwischen Anfragen zu speichern
     cart = request.session.get('cart', [])
@@ -61,7 +62,25 @@ def add_to_cart(request, pk):
     else:
         cart.append({'product_id': product.id, 'quantity': 1})
     request.session['cart'] = cart
-    return HttpResponse('Product added to cart')
+    # return HttpResponse('Product added to cart')
+    current_product = Product.objects.get(id=product.id) 
+    if request.method == 'POST':
+        rating_form = RatingForm(request.POST)
+        rating_form.instance.user = current_user
+        rating_form.instance.product = current_product
+
+        if rating_form.is_valid():
+            rating_form.save()
+        else:
+            print(rating_form.errors)
+
+    ratings = Rating.objects.filter(product_id=current_product)
+    context = {
+        'single_product': current_product,
+        'ratings_on_the_product': ratings,
+        'rating_form': RatingForm
+    }
+    return render(request, 'product-detail.html', context)
 
 def cart_detail(request):
     cart = request.session.get('cart', [])

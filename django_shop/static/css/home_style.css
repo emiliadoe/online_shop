@@ -75,32 +75,8 @@ form {
   }
 }
 
-span.green {
-color: #00cc00;
-}
-
-span.red {
-color: #ff0000;
-}
-
-div.votes {
-margin: 5px 0 20px 20px;
-}
-
-div.votes a {
-text-decoration: none;
-}
-
-div.votes img {
-width: 15px;
-}
-
-.comment-meta {
-color: lightgrey;
-font-size: 0.65em;
-}
-
-.comment {
-color: darkgrey;
-font-size: 0.85em;
+header {
+  background-color: #36864e;
+  text-align: center;
+  width: 100%;
 }
