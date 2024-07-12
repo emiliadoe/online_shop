@@ -3,8 +3,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endblock %}
-
+{% endblock %}
 
 {% block content %}
 <body>
@@ -69,5 +68,9 @@
 
     <br>
 
+    <form method="POST" action="{% url 'delete-product' single_product.id %}">
+        {% csrf_token %}
+        <button type="submit" class="button" role="button">Delete Product</button>
+    </form>
 </body>
 {% endblock %}
