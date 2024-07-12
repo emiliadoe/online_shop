@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, CreateView
 from .forms import ProductForm, RatingEditForm
@@ -25,6 +25,13 @@ class CustomerServiceView(ListView):
         context = super().get_context_data(**kwargs)
         context['ratings'] = Rating.objects.all()
         return context
+
+    def post(self, request, *args, **kwargs):
+        if 'delete_product' in request.POST:
+            product_id = request.POST.get('product_id')
+            product = get_object_or_404(Product, id=product_id)
+            product.delete()
+        return redirect('customer-service')
     
 # class CommentDeleteView(LoginRequiredMixin, ListView):
 #     login_url = '/useradmin/login/'
@@ -124,4 +131,7 @@ class ProductAddView(CreateView):
     template_name = 'add-product.html'
     success_url = reverse_lazy('overview')
     
-    
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.delete()
+    return redirect('customer-service')
