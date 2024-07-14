@@ -1,12 +1,15 @@
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+{% block title %}World of Sweets{% endblock %}
+</title>
 {% load static %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endblock %}
-
-    <title>
-{% block title %}World of Sweets{% endblock %}
-</title>
+    {% endblock %}    
+</head>
 <body>
     <header>
         <div class="logo">
@@ -14,9 +17,24 @@
         </div>
         <nav>
             <ul>
+                {% if user.is_authenticated %}
+
+                {% block logged_in_content %}
                 <li><a href="{% url 'overview' %}">Produktübersicht</a></li>
                 <li><a href="{% url 'product-search' %}">Produktsuche</a></li>
                 <li><a href="{% url 'cart-detail' %}">Warenkorb</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% endblock %}
+
+                {% else %}
+            
+                    {% block not_logged_in_content %}
+                        <p>You are not logged in</p>
+                        <li> <a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Signup</a></li>
+                    {% endblock %}
+            
+                {% endif %}
             </ul>
         </nav>
     </header>

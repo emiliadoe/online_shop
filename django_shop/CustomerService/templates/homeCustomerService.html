@@ -10,6 +10,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         {% block logged_in_content %}
+           <p><a href="{% url 'myuser-list' %}">Show me all users</a></p>
             <p><a href="{% url 'add-product' %}">Add a product</a></p>
             
             <h3>Products</h3>
