@@ -30,15 +30,16 @@
             <td><b>Description:</b></td>
             <td><p>{{ single_product.description }}</p><br></td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td><b>Type:</b></td>
             <td>{{ single_product.get_type_display }}<br></td>
-        </tr>
+        </tr> -->
         <tr>
-            <td><b>PDF:</b></td>
             <td>
                 {% if single_product.pdf %}
-                    <a href="{{ single_product.pdf.url }}">Download PDF</a>
+                    <button> 
+                        <a href="{{ single_product.pdf.url }}">Download PDF</a>
+                    </button>
                 {% else %}
                     Keine PDF vorhanden
                 {% endif %}
