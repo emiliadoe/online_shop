@@ -20,7 +20,7 @@ class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
 
-        fields = ['text']
+        fields = ['text', 'rating']
 
         widgets = {
             'user': forms.HiddenInput(),

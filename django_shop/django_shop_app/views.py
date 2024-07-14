@@ -35,15 +35,18 @@ def product_detail(request, **kwargs):
 
         if rating_form.is_valid():
             rating_form.save()
+            return redirect('product-detail', pk=product_id)
         else:
             print(rating_form.errors)
+    else:
+        rating_form = RatingForm()
 
     ratings = Rating.objects.filter(product_id=current_product)
 
     context = {
         'single_product': current_product,
         'ratings_on_the_product': ratings,
-        'rating_form': RatingForm
+        'rating_form': rating_form
     }
 
     return render(request, 'product-detail.html', context)

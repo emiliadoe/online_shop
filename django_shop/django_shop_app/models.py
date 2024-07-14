@@ -40,7 +40,7 @@ class Product(models.Model):
 class Rating(models.Model):
 
     text = models.TextField(max_length=500)
-    """ star rating """
+    rating = models.IntegerField(choices=[(i, f'{i} Sterne') for i in range(1, 6)], default=3)  # 1-5 Sterne Bewertung
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
