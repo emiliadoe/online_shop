@@ -22,8 +22,6 @@
     <a href="{% url 'overview' %}">Weiter einkaufen</a>
 </body>
 
-
-{% endblock %}
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -43,9 +41,14 @@
                 },
                 error: function(err) {
                     console.error('Fehler beim Löschen des Elements:', err);
+                    console.log(itemId)
+                    console.log($(this).data)
+
                 }
             });
         });
     });
     </script>
+
+{% endblock %}
 
