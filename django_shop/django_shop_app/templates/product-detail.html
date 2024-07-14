@@ -1,11 +1,16 @@
 {% extends "overview.html" %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+{% block title %}World of Sweets{% endblock %}
+</title>
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endblock %}
-
-
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}    
+</head>
 {% block content %}
 <body>
     <h2>{{ single_product.title }}</h2>
@@ -69,5 +74,9 @@
 
     <br>
 
+    <form method="POST" action="{% url 'delete-product' single_product.id %}">
+        {% csrf_token %}
+        <button type="submit" class="button" role="button">Delete Product</button>
+    </form>
 </body>
 {% endblock %}
