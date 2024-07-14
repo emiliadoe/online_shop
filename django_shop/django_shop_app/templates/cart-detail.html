@@ -14,41 +14,15 @@
     <ul>
         {% for item in cart_items %}
             <li>{{ item.quantity }} x {{ item.product.title }} - {{ item.total_price }} €
-                <button class="delete-btn" data-item-id="{{ item.id }}">Löschen</button>
+                <form method="POST" action="{% url 'overview' %}">
+                    {% csrf_token %}
+                    <button type="submit" >Löschen</button>
+                </form>
             </li>
         {% endfor %}
     </ul>
     <p>Gesamtpreis: {{ total_price }} €</p>
     <a href="{% url 'overview' %}">Weiter einkaufen</a>
 </body>
-
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('.delete-btn').on('click', function() {
-            var itemId = $(this).data('item-id');
-            
-            $.ajax({
-                url: '/remove-from-cart/' + itemId + '/',
-                method: 'POST',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                },
-                success: function() {
-                    // Aktualisiere den Einkaufswagen auf der Seite oder lade die Seite neu
-                    location.reload(); // Beispiel: Seite neu laden
-                },
-                error: function(err) {
-                    console.error('Fehler beim Löschen des Elements:', err);
-                    console.log(itemId)
-                    console.log($(this).data)
-
-                }
-            });
-        });
-    });
-    </script>
-
 {% endblock %}
 

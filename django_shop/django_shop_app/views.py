@@ -6,10 +6,11 @@ from django.db.models import Q
 from django.views.decorators.http import require_POST
 
 @require_POST
-def remove_from_cart(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
+def remove_from_cart(request, pk):
+    print(f"Item ID: {pk}")
+    item = get_object_or_404(CartItem, id=pk)
     item.delete()
-    return HttpResponse(status=204) 
+    return redirect('cart-detail.html') 
 
 
 def overview_list(request):
