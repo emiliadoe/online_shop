@@ -10,12 +10,19 @@
 {% block content %}
     {% if user.is_authenticated %}
         {% block logged_in_content %}
+           <p><a href="{% url 'myuser-list' %}">Show me all users</a></p>
             <p><a href="{% url 'add-product' %}">Add a product</a></p>
             
             <h3>Products</h3>
             {% if products %}
                 {% for product in products %}
-                    <p><a href="{% url 'edit-product' product.pk %}">Edit {{ product.title }}</a></p>
+                    <div>
+                        <p><a href="{% url 'edit-product' product.pk %}">Edit {{ product.title }}</a></p>
+                        <form method="POST" action="{% url 'delete-product' product.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
                 {% endfor %}
             {% else %}
                 <p>No products available.</p>
@@ -24,8 +31,14 @@
             <h3>Comments</h3>
             {% if comments %}
                 {% for comment in comments %}
-                    <p><a href="{% url 'comment-edit' comment.pk %}">Edit a comment</a></p>
-                    <p><a href="{% url 'comment-delete' comment.pk %}">Delete a comment</a></p>
+                    <div>
+                        <p><a href="{% url 'comment-edit' comment.pk %}">Edit a comment</a></p>
+                        <form method="POST" action="{% url 'comment-delete' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="pk" value="{{ comment.pk }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
                 {% endfor %}
             {% else %}
                 <p>No comments available.</p>

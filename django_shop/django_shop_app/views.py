@@ -22,13 +22,18 @@ def rate(request, pk: str, up_or_down: str):
 
 
 def product_detail(request, **kwargs):
-
-    product_id = kwargs['pk']  # pk refers to "primary key"
-    current_product = Product.objects.get(id=product_id) 
+    product_id = kwargs['pk']  
+    current_product = get_object_or_404(Product, id=product_id)
     current_user = request.user
 
-    # COMMENTS
-    if request.method == 'POST':
+    if not (current_user.groups.filter(name='Kundenservice').exists() or current_user.is_superuser):
+        return redirect('overview')
+
+    if request.method == 'POST' and 'delete_product' in request.POST:
+        current_product.delete()
+        return redirect('overview')
+
+    if request.method == 'POST' and 'rating_form' in request.POST:
         rating_form = RatingForm(request.POST)
         rating_form.instance.user = current_user
         rating_form.instance.product = current_product
@@ -38,12 +43,12 @@ def product_detail(request, **kwargs):
         else:
             print(rating_form.errors)
 
-    ratings = Rating.objects.filter(product_id=current_product)
+    ratings = Rating.objects.filter(product_id=current_product.id)
 
     context = {
         'single_product': current_product,
         'ratings_on_the_product': ratings,
-        'rating_form': RatingForm
+        'rating_form': RatingForm(),
     }
 
     return render(request, 'product-detail.html', context)
