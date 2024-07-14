@@ -1,8 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Product, Rating, CartItem
 from .forms import RatingForm, SearchForm
 from django.http import HttpResponse
 from django.db.models import Q
+from django.views.decorators.http import require_POST
+
+@require_POST
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    item.delete()
+    return HttpResponse(status=204) 
 
 
 def overview_list(request):
