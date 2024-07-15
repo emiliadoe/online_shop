@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Rating
+from .models import Product, Rating, CartItem
 from .forms import RatingForm, SearchForm
 from django.http import HttpResponseNotFound
 from django.db.models import Q
-
 
 def remove_from_cart(request, pk):
   cart = request.session.get('cart', [])
@@ -22,6 +21,7 @@ def remove_from_cart(request, pk):
   request.session['cart'] = cart
   request.session.modified = True  
   return redirect('cart-detail')
+
 
 
 def overview_list(request):
@@ -75,23 +75,37 @@ def product_detail(request, **kwargs):
 
 
 def add_to_cart(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    current_user = request.user
+
+    # session - Sitzungen, um Daten zwischen Anfragen zu speichern
     cart = request.session.get('cart', [])
-    cart_items = []
     for item in cart:
-        try:
-            product = Product.objects.get(id=item['product_id'])
-            cart_items.append({
-                'product': product,
-                'quantity': item['quantity'],
-            })
-        except Product.DoesNotExist:
-            pass  
+        if item['product_id'] == product.id:
+            item['quantity'] += 1
+            break
+    else:
+        cart.append({'product_id': product.id, 'quantity': 1})
+    request.session['cart'] = cart
 
+    current_product = Product.objects.get(id=product.id) 
+    if request.method == 'POST':
+        rating_form = RatingForm(request.POST)
+        rating_form.instance.user = current_user
+        rating_form.instance.product = current_product
+
+        if rating_form.is_valid():
+            rating_form.save()
+        else:
+            print(rating_form.errors)
+
+    ratings = Rating.objects.filter(product_id=current_product)
     context = {
-        'cart_items': cart_items,
+        'single_product': current_product,
+        'ratings_on_the_product': ratings,
+        'rating_form': RatingForm
     }
-    return render(request, 'cart-detail.html', context)
-
+    return render(request, 'product-detail.html', context)
 
 def cart_detail(request):
     cart = request.session.get('cart', [])
