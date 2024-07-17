@@ -101,25 +101,3 @@ class Report(models.Model):
 
     class Meta:
         unique_together = ('user', 'rating')
-
-""" 
-class Vote(models.Model):
-
-    VOTE_TYPES = [
-        ('1', '1'),
-        ('2', '2'),
-    ]
-
-    up_or_down = models.CharField(max_length=1, choices=VOTE_TYPES)
-
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    holiday_housing = models.ForeignKey(Product, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.up_or_down} on {self.holiday_housing} by {self.user.username}'
-
-    def __repr__(self):
-        return f'{self.up_or_down} on {self.holiday_housing} by {self.user.username} ({self.timestamp})'
-
- """
