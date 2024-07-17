@@ -5,15 +5,17 @@
 {% block title %}World of Sweets{% endblock %}
 </title>
 {% load static %}
-
+<link rel="shortcut icon" type="image/png" sizes="96x96" href="{% static 'images/logo-nobg.png' %}"/>
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock %}    
+
+
 </head>
 <body>
 <header>
     <div class="logo">
-        <img src="{% static 'images/logo.png' %}" alt="Sweets Logo">
+        <img src="{% static 'images/logo-nobg.png' %}" alt="Sweets Logo" style="height: 90px; width: 100px">
     </div>
     <nav>
         <ul>
