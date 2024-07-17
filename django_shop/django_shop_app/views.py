@@ -46,8 +46,8 @@ def product_detail(request, **kwargs):
     current_product = get_object_or_404(Product, id=product_id)
     current_user = request.user
 
-    if not (current_user.groups.filter(name='Kundenservice').exists() or current_user.is_superuser):
-        return redirect('overview')
+   # if not (current_user.groups.filter(name='Kundenservice').exists() or current_user.is_superuser):
+   #     return redirect('overview')
 
     if request.method == 'POST' and 'delete_product' in request.POST:
         current_product.delete()
