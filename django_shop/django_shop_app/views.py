@@ -30,14 +30,16 @@ def product_detail(request, **kwargs):
     # COMMENTS
     if request.method == 'POST':
         rating_form = RatingForm(request.POST)
-        rating_form.instance.user = current_user
-        rating_form.instance.product = current_product
-
-        if rating_form.is_valid():
-            rating_form.save()
-            return redirect('product-detail', pk=product_id)
+        if Rating.objects.filter(user=current_user, product=current_product).exists():
+            rating_form.add_error(None, "You have already rated this product.")
         else:
-            print(rating_form.errors)
+            rating_form.instance.user = current_user
+            rating_form.instance.product = current_product
+            if rating_form.is_valid():
+                rating_form.save()
+                return redirect('product-detail', pk=product_id)
+            else:
+                print(rating_form.errors)
     else:
         rating_form = RatingForm()
 

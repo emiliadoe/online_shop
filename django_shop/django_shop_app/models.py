@@ -49,6 +49,7 @@ class Rating(models.Model):
         ordering = ['timestamp']
         verbose_name = 'Rating'
         verbose_name_plural = 'Ratings'
+        unique_together = ('user', 'product')
 
     def get_comment_excerpt(self):
         if len(self.text) > 50:
