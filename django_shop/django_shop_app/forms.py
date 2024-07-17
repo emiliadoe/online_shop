@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Rating
+from .models import Product, Rating, Report
 
 
 class ProductForm(forms.ModelForm):
@@ -37,3 +37,22 @@ class SearchForm(forms.ModelForm):
         model = Product
         fields = ['title', 'description']   #, 'ratings']
 
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['reason', 'description']
+
+        widgets = {
+            'reason': forms.Select(choices=Report.REASON_CHOICES),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Optional: Add any additional information'}),
+        }
+
+class EditRatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['text', 'rating']
+
+        widgets = {
+            'rating': forms.Select(choices=[(i, f'{i} Sterne') for i in range(1, 6)]),
+            'text': forms.Textarea(attrs={'rows': 3}),
+        }

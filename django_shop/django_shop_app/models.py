@@ -85,7 +85,21 @@ class ReviewVote(models.Model):
     class Meta:
         unique_together = ('user', 'rating')
 
+class Report(models.Model):
+    REASON_CHOICES = [
+        ('spam', 'Spam'),
+        ('offensive', 'Offensive'),
+        ('other', 'Other')
+    ]
 
+    reason = models.CharField(max_length=10, choices=REASON_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('user', 'rating')
 
 """ 
 class Vote(models.Model):

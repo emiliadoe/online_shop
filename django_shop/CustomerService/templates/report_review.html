@@ -1,0 +1,21 @@
+{% extends "overview.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <h2>Report Review</h2>
+    <p>Review by {{ rating.user.username }} on {{ rating.timestamp }}</p>
+    <p>{{ rating.text }}</p>
+    <p>Rating: {{ rating.rating }} / 5</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Report</button>
+    </form>
+</body>
+{% endblock %}

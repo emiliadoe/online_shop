@@ -63,6 +63,11 @@
             <p>
                 Hilfreich: <span id="helpful-count-{{ rating.id }}">{{ rating.helpful_count }}</span>
                 Nicht hilfreich: <span id="not-helpful-count-{{ rating.id }}">{{ rating.not_helpful_count }}</span>
+                <a href="{% url 'report-review' rating.id %}">Melden</a>
+            {% if rating.user == request.user %}
+                | <a href="{% url 'edit-rating' rating.id %}">Bearbeiten</a>
+                | <a href="{% url 'delete-rating' rating.id %}">Löschen</a>
+            {% endif %}
             </p>
         </div>
     {% endfor %}

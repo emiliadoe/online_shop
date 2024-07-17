@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Rating, CartItem, ReviewVote
-from .forms import RatingForm, SearchForm
+from .forms import EditRatingForm, RatingForm, SearchForm
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Count, Q
-
+from .forms import ReportForm
 
 def overview_list(request):
     products = Product.objects.all()
@@ -81,6 +81,27 @@ def vote_review(request, rating_id, vote_type):
         'not_helpful_count': not_helpful_count,
         'vote_type': vote_type
     })
+
+def edit_rating(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id, user=request.user)
+    if request.method == 'POST':
+        form = EditRatingForm(request.POST, instance=rating)
+        if form.is_valid():
+            form.save()
+            return redirect('product-detail', pk=rating.product.id)
+    else:
+        form = EditRatingForm(instance=rating)
+
+    return render(request, 'edit_rating.html', {'form': form, 'rating': rating})
+
+def delete_rating(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id, user=request.user)
+    if request.method == 'POST':
+        product_id = rating.product.id
+        rating.delete()
+        return redirect('product-detail', pk=product_id)
+    
+    return render(request, 'confirm_delete_rating.html', {'rating': rating})
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
@@ -176,3 +197,20 @@ def product_search(request):
         }
 
     return render(request, 'product-search.html', context)
+
+def report_review(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id)
+    user = request.user
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user = user
+            report.rating = rating
+            report.save()
+            return redirect('product-detail', pk=rating.product.id)
+    else:
+        form = ReportForm()
+
+    return render(request, 'report_review.html', {'form': form, 'rating': rating})
