@@ -7,11 +7,11 @@
 
 {% block content %}
 <body>
-    <h2>Edit Review</h2>
+    <h2>Bewertung editieren</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save Changes</button>
+        <button type="submit">Änderungen Speichern</button>
     </form>
 </body>
 {% endblock %}

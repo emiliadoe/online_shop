@@ -7,14 +7,14 @@
 
 {% block content %}
 <body>
-    <h2>Confirm Delete Review</h2>
-    <p>Are you sure you want to delete this review?</p>
+    <h2>Bewertung löschen bestätigen</h2>
+    <p>Sind sie sicher das sie diese Bewertung löschen möchten?</p>
     <p>{{ rating.text }}</p>
-    <p>Rating: {{ rating.rating }} / 5</p>
+    <p>Bewertung: {{ rating.rating }} / 5</p>
     <form method="POST">
         {% csrf_token %}
-        <button type="submit">Yes, delete</button>
-        <a href="{% url 'product-detail' rating.product.id %}">Cancel</a>
+        <button type="submit">Ja, Löschen</button>
+        <a href="{% url 'product-detail' rating.product.id %}">Abbrechen</a>
     </form>
 </body>
 {% endblock %}

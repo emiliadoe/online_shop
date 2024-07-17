@@ -7,15 +7,15 @@
 
 {% block content %}
 <body>
-    <h2>Report Review</h2>
-    <p>Review by {{ rating.user.username }} on {{ rating.timestamp }}</p>
+    <h2>Bewertung melden</h2>
+    <p>Bewertung von {{ rating.user.username }} am {{ rating.timestamp }}</p>
     <p>{{ rating.text }}</p>
-    <p>Rating: {{ rating.rating }} / 5</p>
+    <p>Bewertung: {{ rating.rating }} / 5</p>
 
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit Report</button>
+        <button type="submit">Melden</button>
     </form>
 </body>
 {% endblock %}
