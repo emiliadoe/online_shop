@@ -60,6 +60,10 @@
                 <a href="{% url 'vote-review' rating.id 'helpful' %}">Hilfreich</a> |
                 <a href="{% url 'vote-review' rating.id 'not_helpful' %}">Nicht hilfreich</a>
             </p>
+            <p>
+                Hilfreich: {{ rating.helpful_count }}
+                Nicht hilfreich: {{ rating.not_helpful_count }}
+            </p>
         </div>
     {% endfor %}
 

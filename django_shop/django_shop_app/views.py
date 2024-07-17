@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Rating, CartItem, ReviewVote
 from .forms import RatingForm, SearchForm
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Count, Q
 
 
 def overview_list(request):
@@ -43,7 +43,10 @@ def product_detail(request, **kwargs):
     else:
         rating_form = RatingForm()
 
-    ratings = Rating.objects.filter(product_id=current_product)
+    ratings = Rating.objects.filter(product_id=current_product).annotate(
+        helpful_count=Count('reviewvote', filter=Q(reviewvote__vote_type='helpful')),
+        not_helpful_count=Count('reviewvote', filter=Q(reviewvote__vote_type='not_helpful'))
+    )
 
     context = {
         'single_product': current_product,
