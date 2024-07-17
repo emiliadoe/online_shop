@@ -1,14 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Rating, CartItem, ReviewVote
 from .forms import EditRatingForm, RatingForm, SearchForm
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse
 from django.db.models import Count, Q
 from .forms import ReportForm
+
+def remove_from_cart(request, pk):
+  cart = request.session.get('cart', [])
+  item_found = False
+  for item in cart:
+        if item['product_id'] == pk:
+            item_found = True
+            if item['quantity'] > 1:
+                item['quantity'] -= 1
+            else:
+                cart.remove(item)
+            break
+  if not item_found:
+        return HttpResponseNotFound("No CartItem matches the given criteria.")
+
+  request.session['cart'] = cart
+  request.session.modified = True  
+  return redirect('cart-detail')
+
 
 def overview_list(request):
     products = Product.objects.all()
     context = {'all_products': products}
     return render(request, 'overview.html', context)
+
 
 
 def rate(request, pk: str, up_or_down: str):
@@ -22,13 +42,18 @@ def rate(request, pk: str, up_or_down: str):
 
 
 def product_detail(request, **kwargs):
-
-    product_id = kwargs['pk']  # pk refers to "primary key"
-    current_product = Product.objects.get(id=product_id) 
+    product_id = kwargs['pk']  
+    current_product = get_object_or_404(Product, id=product_id)
     current_user = request.user
 
-    # COMMENTS
-    if request.method == 'POST':
+   # if not (current_user.groups.filter(name='Kundenservice').exists() or current_user.is_superuser):
+   #     return redirect('overview')
+
+    if request.method == 'POST' and 'delete_product' in request.POST:
+        current_product.delete()
+        return redirect('overview')
+
+    if request.method == 'POST' and 'rating_form' in request.POST:
         rating_form = RatingForm(request.POST)
         if Rating.objects.filter(user=current_user, product=current_product).exists():
             rating_form.add_error(None, "You have already rated this product.")
@@ -116,7 +141,7 @@ def add_to_cart(request, pk):
     else:
         cart.append({'product_id': product.id, 'quantity': 1})
     request.session['cart'] = cart
-    # return HttpResponse('Product added to cart')
+
     current_product = Product.objects.get(id=product.id) 
     if request.method == 'POST':
         rating_form = RatingForm(request.POST)

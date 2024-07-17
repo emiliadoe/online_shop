@@ -34,4 +34,5 @@ urlpatterns = [
     path('report_review/<int:rating_id>/', views.report_review, name='report-review'),
     path('edit_rating/<int:rating_id>/', views.edit_rating, name='edit-rating'),
     path('delete_rating/<int:rating_id>/', views.delete_rating, name='delete-rating'),
+    path('remove-from-cart/<int:pk>/', views.remove_from_cart, name='remove_from_cart'),
 ]

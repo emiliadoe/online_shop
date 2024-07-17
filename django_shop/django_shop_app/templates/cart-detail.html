@@ -13,12 +13,17 @@
     <h1>Einkaufswagen</h1>
     <ul>
         {% for item in cart_items %}
-            <li>{{ item.quantity }} x {{ item.product.name }} - {{ item.total_price }} €</li>
+            <li>{{ item.quantity }} x {{ item.product.title }}- {{ item.total_price }} €</li>
+           <form method="POST"   action="{% url 'remove_from_cart' item.product.id %}">
+            {% csrf_token %}
+            <button type="submit" >Löschen</button>
+        </form>
         {% endfor %}
     </ul>
     <p>Gesamtpreis: {{ total_price }} €</p>
     <a href="{% url 'overview' %}">Weiter einkaufen</a>
 </body>
+
 
 {% endblock %}
 

@@ -1,54 +1,73 @@
-{% load static %}
-
-{% block css %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endblock %}
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
 {% block title %}World of Sweets{% endblock %}
 </title>
+{% load static %}
+<link rel="shortcut icon" type="image/png" sizes="96x96" href="{% static 'images/logo-nobg.png' %}"/>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}    
+
+
+</head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="{% static 'images/logo.png' %}" alt="Sweets Logo">
-        </div>
-        <nav>
-            <ul>
+<header>
+    <div class="logo">
+        <img src="{% static 'images/logo-nobg.png' %}" alt="Sweets Logo" style="height: 90px; width: 100px">
+    </div>
+    <nav>
+        <ul>
+            {% if user.is_authenticated and user.is_staff %}
+                <li><a href="{% url 'customer-service' %}">Customer Service</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                {% block logged_in_content %}
                 <li><a href="{% url 'overview' %}">Produktübersicht</a></li>
                 <li><a href="{% url 'product-search' %}">Produktsuche</a></li>
                 <li><a href="{% url 'cart-detail' %}">Warenkorb</a></li>
-            </ul>
-        </nav>
-    </header>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% endblock %}
+            {% else %}
+                {% block not_logged_in_content %}
+                    <p>You are not logged in</p>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'signup' %}">Signup</a></li>
+                {% endblock %}
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
-    <main>
-    {% block content %}
-        <h1>World of Sweets</h1>
-            <br>
-           
-            <section class="products">
-                <div class="product-list">
-                    {% for product in all_products %}
-                        <div class="product">
-                            <a href="{{ product.id }}">
-                             <img src="{{ product.image.url }}" alt="{{ product.title }}"> 
-                            <h3 class="title">{{ product.title }}</h3>
-                        </a>
-                            <p class="description">{{ product.description }}</p>
-                            <p class="price">{{ product.price }} €</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section> 
-        </main>
-
-
-        {% endblock %}
+<main>
+{% block content %}
+    <h1>World of Sweets</h1>
+        <br>
+       
+        <section class="products">
+            <div class="product-list">
+                {% for product in all_products %}
+                    <div class="product">
+                        <a href="{{ product.pk }}">
+                         <img src="{{ product.image.url }}" alt="{{ product.title }}"> 
+                        <h3 class="title">{{ product.title }}</h3>
+                        <p class="description">{{ product.description }}</p>
+                        <p class="price">{{ product.price }} €</p>
+                    </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section> 
     </main>
 
-    <footer>
-        <p>&copy; 2024 World of Sweets</p>
-    </footer>
+
+    {% endblock %}
+</main>
+
+<footer>
+    <p>&copy; 2024 World of Sweets</p>
+</footer>
 </body>
 
 
