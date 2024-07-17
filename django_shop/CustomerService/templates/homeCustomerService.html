@@ -8,27 +8,39 @@
 {% block title %}Customer Service{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
+
+<h1>Customer Service Portal</h1>
+    {% if user.is_authenticated and user.is_staff%}
         {% block logged_in_content %}
            <p><a href="{% url 'myuser-list' %}">Show me all users</a></p>
-            <p><a href="{% url 'add-product' %}">Add a product</a></p>
             
-            <h3>Products</h3>
+            <h2>Product Overview</h2>
+            <form method="POST" action="{% url 'add-product'%}">
+                {% csrf_token %}
+                <button type="submit">Add a new Product</button>
+            </form>
             {% if products %}
+            <h3>Click to edit products</h3>
                 {% for product in products %}
                     <div>
-                        <p><a href="{% url 'edit-product' product.pk %}">Edit {{ product.title }}</a></p>
-                        <form method="POST" action="{% url 'delete-product' product.pk %}" style="display:inline;">
+                        <ul>
+                        <li><a href="{% url 'edit-product' product.pk %}">{{ product.title }}</a></li>
+                        <form method="POST" action="{% url 'delete-product' product.pk %}">
                             {% csrf_token %}
                             <button type="submit">Delete</button>
                         </form>
+                <!--             <form method="POST" action="{% url 'edit-product' product.pk %}">
+                                {% csrf_token %}
+                                <button type="submit">Edit</button>
+                        </form> -->
+                    </ul>
                     </div>
                 {% endfor %}
             {% else %}
                 <p>No products available.</p>
             {% endif %}
             
-            <h3>Comments</h3>
+            <h2>Comments</h2>
             {% if comments %}
                 {% for comment in comments %}
                     <div>
