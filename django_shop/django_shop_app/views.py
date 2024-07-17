@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Rating, CartItem
+from .models import Product, Rating, CartItem, ReviewVote
 from .forms import RatingForm, SearchForm
 from django.http import HttpResponse
 from django.db.models import Q
@@ -53,6 +53,14 @@ def product_detail(request, **kwargs):
 
     return render(request, 'product-detail.html', context)
 
+def vote_review(request, rating_id, vote_type):
+    rating = get_object_or_404(Rating, id=rating_id)
+    user = request.user
+
+    if not ReviewVote.objects.filter(user=user, rating=rating).exists():
+        ReviewVote.objects.create(user=user, rating=rating, vote_type=vote_type)
+
+    return redirect('product-detail', pk=rating.product.id)
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)

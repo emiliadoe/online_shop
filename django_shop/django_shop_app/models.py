@@ -71,6 +71,22 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
 
+
+class ReviewVote(models.Model):
+    VOTE_CHOICES = [
+        ('helpful', 'Helpful'),
+        ('not_helpful', 'Not Helpful'),
+    ]
+
+    vote_type = models.CharField(max_length=11, choices=VOTE_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'rating')
+
+
+
 """ 
 class Vote(models.Model):
 

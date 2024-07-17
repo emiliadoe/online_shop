@@ -56,6 +56,10 @@
             <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
             <p class="rating">{{ rating.text }}</p>
             <p class="rating">Rating: {{ rating.rating }} / 5</p>
+            <p>
+                <a href="{% url 'vote-review' rating.id 'helpful' %}">Hilfreich</a> |
+                <a href="{% url 'vote-review' rating.id 'not_helpful' %}">Nicht hilfreich</a>
+            </p>
         </div>
     {% endfor %}
 
