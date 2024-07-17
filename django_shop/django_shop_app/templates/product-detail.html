@@ -57,12 +57,12 @@
             <p class="rating">{{ rating.text }}</p>
             <p class="rating">Rating: {{ rating.rating }} / 5</p>
             <p>
-                <a href="{% url 'vote-review' rating.id 'helpful' %}">Hilfreich</a> |
-                <a href="{% url 'vote-review' rating.id 'not_helpful' %}">Nicht hilfreich</a>
+                <a href="#" class="vote-link" data-id="{{ rating.id }}" data-type="helpful">Hilfreich</a> |
+                <a href="#" class="vote-link" data-id="{{ rating.id }}" data-type="not_helpful">Nicht hilfreich</a>
             </p>
             <p>
-                Hilfreich: {{ rating.helpful_count }}
-                Nicht hilfreich: {{ rating.not_helpful_count }}
+                Hilfreich: <span id="helpful-count-{{ rating.id }}">{{ rating.helpful_count }}</span>
+                Nicht hilfreich: <span id="not-helpful-count-{{ rating.id }}">{{ rating.not_helpful_count }}</span>
             </p>
         </div>
     {% endfor %}
@@ -78,5 +78,21 @@
 
     <br>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.vote-link').click(function(e) {
+                e.preventDefault();
+                var ratingId = $(this).data('id');
+                var voteType = $(this).data('type');
+                var url = '{% url "vote-review" 0 "vote_type" %}'.replace('0', ratingId).replace('vote_type', voteType);
+
+                $.get(url, function(data) {
+                    $('#helpful-count-' + ratingId).text(data.helpful_count);
+                    $('#not-helpful-count-' + ratingId).text(data.not_helpful_count);
+                });
+            });
+        });
+    </script>
 </body>
 {% endblock %}

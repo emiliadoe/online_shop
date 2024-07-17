@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Rating, CartItem, ReviewVote
 from .forms import RatingForm, SearchForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Count, Q
 
 
@@ -60,10 +60,27 @@ def vote_review(request, rating_id, vote_type):
     rating = get_object_or_404(Rating, id=rating_id)
     user = request.user
 
-    if not ReviewVote.objects.filter(user=user, rating=rating).exists():
+    try:
+        review_vote = ReviewVote.objects.get(user=user, rating=rating)
+        if review_vote.vote_type == vote_type:
+            # If the user clicks again on the same vote, remove the vote
+            review_vote.delete()
+        else:
+            # If the user changes the vote type, update the vote
+            review_vote.vote_type = vote_type
+            review_vote.save()
+    except ReviewVote.DoesNotExist:
+        # If the user hasn't voted yet, create a new vote
         ReviewVote.objects.create(user=user, rating=rating, vote_type=vote_type)
 
-    return redirect('product-detail', pk=rating.product.id)
+    helpful_count = ReviewVote.objects.filter(rating=rating, vote_type='helpful').count()
+    not_helpful_count = ReviewVote.objects.filter(rating=rating, vote_type='not_helpful').count()
+
+    return JsonResponse({
+        'helpful_count': helpful_count,
+        'not_helpful_count': not_helpful_count,
+        'vote_type': vote_type
+    })
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
