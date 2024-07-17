@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Rating, CartItem
-from .forms import RatingForm, SearchForm
-from django.http import HttpResponseNotFound
-from django.db.models import Q
+from .models import Product, Rating, CartItem, ReviewVote
+from .forms import EditRatingForm, RatingForm, SearchForm
+from django.http import HttpResponseNotFound, JsonResponse
+from django.db.models import Count, Q
+from .forms import ReportForm
 
 def remove_from_cart(request, pk):
   cart = request.session.get('cart', [])
@@ -21,7 +22,6 @@ def remove_from_cart(request, pk):
   request.session['cart'] = cart
   request.session.modified = True  
   return redirect('cart-detail')
-
 
 
 def overview_list(request):
@@ -55,24 +55,78 @@ def product_detail(request, **kwargs):
 
     if request.method == 'POST' and 'rating_form' in request.POST:
         rating_form = RatingForm(request.POST)
-        rating_form.instance.user = current_user
-        rating_form.instance.product = current_product
-
-        if rating_form.is_valid():
-            rating_form.save()
+        if Rating.objects.filter(user=current_user, product=current_product).exists():
+            rating_form.add_error(None, "You have already rated this product.")
         else:
-            print(rating_form.errors)
+            rating_form.instance.user = current_user
+            rating_form.instance.product = current_product
+            if rating_form.is_valid():
+                rating_form.save()
+                return redirect('product-detail', pk=product_id)
+            else:
+                print(rating_form.errors)
+    else:
+        rating_form = RatingForm()
 
-    ratings = Rating.objects.filter(product_id=current_product.id)
+    ratings = Rating.objects.filter(product_id=current_product).annotate(
+        helpful_count=Count('reviewvote', filter=Q(reviewvote__vote_type='helpful')),
+        not_helpful_count=Count('reviewvote', filter=Q(reviewvote__vote_type='not_helpful'))
+    )
 
     context = {
         'single_product': current_product,
         'ratings_on_the_product': ratings,
-        'rating_form': RatingForm(),
+        'rating_form': rating_form
     }
 
     return render(request, 'product-detail.html', context)
 
+def vote_review(request, rating_id, vote_type):
+    rating = get_object_or_404(Rating, id=rating_id)
+    user = request.user
+
+    try:
+        review_vote = ReviewVote.objects.get(user=user, rating=rating)
+        if review_vote.vote_type == vote_type:
+            # If the user clicks again on the same vote, remove the vote
+            review_vote.delete()
+        else:
+            # If the user changes the vote type, update the vote
+            review_vote.vote_type = vote_type
+            review_vote.save()
+    except ReviewVote.DoesNotExist:
+        # If the user hasn't voted yet, create a new vote
+        ReviewVote.objects.create(user=user, rating=rating, vote_type=vote_type)
+
+    helpful_count = ReviewVote.objects.filter(rating=rating, vote_type='helpful').count()
+    not_helpful_count = ReviewVote.objects.filter(rating=rating, vote_type='not_helpful').count()
+
+    return JsonResponse({
+        'helpful_count': helpful_count,
+        'not_helpful_count': not_helpful_count,
+        'vote_type': vote_type
+    })
+
+def edit_rating(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id, user=request.user)
+    if request.method == 'POST':
+        form = EditRatingForm(request.POST, instance=rating)
+        if form.is_valid():
+            form.save()
+            return redirect('product-detail', pk=rating.product.id)
+    else:
+        form = EditRatingForm(instance=rating)
+
+    return render(request, 'edit_rating.html', {'form': form, 'rating': rating})
+
+def delete_rating(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id, user=request.user)
+    if request.method == 'POST':
+        product_id = rating.product.id
+        rating.delete()
+        return redirect('product-detail', pk=product_id)
+    
+    return render(request, 'confirm_delete_rating.html', {'rating': rating})
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
@@ -168,3 +222,20 @@ def product_search(request):
         }
 
     return render(request, 'product-search.html', context)
+
+def report_review(request, rating_id):
+    rating = get_object_or_404(Rating, id=rating_id)
+    user = request.user
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user = user
+            report.rating = rating
+            report.save()
+            return redirect('product-detail', pk=rating.product.id)
+    else:
+        form = ReportForm()
+
+    return render(request, 'report_review.html', {'form': form, 'rating': rating})

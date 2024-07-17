@@ -55,18 +55,32 @@
         <a href="{% url 'cart-detail' %}">Zum Warenkorb</a>
     </button>
 
-    <h2>Ratings</h2>
+    <h2>Bewertungen</h2>
 
     {% for rating in ratings_on_the_product %}
         <div>
             <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
             <p class="rating">{{ rating.text }}</p>
+            <p class="rating">Bewertung: {{ rating.rating }} / 5</p>
+            <p>
+                <a href="#" class="vote-link" data-id="{{ rating.id }}" data-type="helpful">Hilfreich</a> |
+                <a href="#" class="vote-link" data-id="{{ rating.id }}" data-type="not_helpful">Nicht hilfreich</a>
+            </p>
+            <p>
+                Hilfreich: <span id="helpful-count-{{ rating.id }}">{{ rating.helpful_count }}</span>
+                Nicht hilfreich: <span id="not-helpful-count-{{ rating.id }}">{{ rating.not_helpful_count }}</span>
+                <a href="{% url 'report-review' rating.id %}">Melden</a>
+            {% if rating.user == request.user %}
+                | <a href="{% url 'edit-rating' rating.id %}">Bearbeiten</a>
+                | <a href="{% url 'delete-rating' rating.id %}">Löschen</a>
+            {% endif %}
+            </p>
         </div>
     {% endfor %}
 
     <br>
 
-    <p>Rate this product!</p>
+    <p>Bewerte das Produkt!</p>
     <form method="POST">
         {% csrf_token %}
         {{ rating_form.as_p }}
@@ -83,5 +97,21 @@
 
     {% endif %}
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.vote-link').click(function(e) {
+                e.preventDefault();
+                var ratingId = $(this).data('id');
+                var voteType = $(this).data('type');
+                var url = '{% url "vote-review" 0 "vote_type" %}'.replace('0', ratingId).replace('vote_type', voteType);
+
+                $.get(url, function(data) {
+                    $('#helpful-count-' + ratingId).text(data.helpful_count);
+                    $('#not-helpful-count-' + ratingId).text(data.not_helpful_count);
+                });
+            });
+        });
+    </script>
 </body>
 {% endblock %}

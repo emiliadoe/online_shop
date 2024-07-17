@@ -1,0 +1,20 @@
+{% extends "overview.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <h2>Bewertung löschen bestätigen</h2>
+    <p>Sind sie sicher das sie diese Bewertung löschen möchten?</p>
+    <p>{{ rating.text }}</p>
+    <p>Bewertung: {{ rating.rating }} / 5</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Ja, Löschen</button>
+        <a href="{% url 'product-detail' rating.product.id %}">Abbrechen</a>
+    </form>
+</body>
+{% endblock %}

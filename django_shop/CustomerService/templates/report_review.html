@@ -1,0 +1,21 @@
+{% extends "overview.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <h2>Bewertung melden</h2>
+    <p>Bewertung von {{ rating.user.username }} am {{ rating.timestamp }}</p>
+    <p>{{ rating.text }}</p>
+    <p>Bewertung: {{ rating.rating }} / 5</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Melden</button>
+    </form>
+</body>
+{% endblock %}

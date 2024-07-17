@@ -40,7 +40,7 @@ class Product(models.Model):
 class Rating(models.Model):
 
     text = models.TextField(max_length=500)
-    """ star rating """
+    rating = models.IntegerField(choices=[(i, f'{i} Sterne') for i in range(1, 6)], default=3)  # 1-5 Sterne Bewertung
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -49,6 +49,7 @@ class Rating(models.Model):
         ordering = ['timestamp']
         verbose_name = 'Rating'
         verbose_name_plural = 'Ratings'
+        unique_together = ('user', 'product')
 
     def get_comment_excerpt(self):
         if len(self.text) > 50:
@@ -70,6 +71,36 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product.name
 
+
+
+class ReviewVote(models.Model):
+    VOTE_CHOICES = [
+        ('helpful', 'Helpful'),
+        ('not_helpful', 'Not Helpful'),
+    ]
+
+    vote_type = models.CharField(max_length=11, choices=VOTE_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'rating')
+
+class Report(models.Model):
+    REASON_CHOICES = [
+        ('spam', 'Spam'),
+        ('offensive', 'Offensive'),
+        ('other', 'Other')
+    ]
+
+    reason = models.CharField(max_length=10, choices=REASON_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('user', 'rating')
 
 """ 
 class Vote(models.Model):
