@@ -31,11 +31,11 @@ class SearchForm(forms.ModelForm):
 
     title = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    # ratings = forms.IntegerField(required=False)
+    ratings = forms.IntegerField(required=False)
 
     class Meta:
         model = Product
-        fields = ['title', 'description']   #, 'ratings']
+        fields = ['title', 'description', 'ratings']
 
 class ReportForm(forms.ModelForm):
     class Meta:

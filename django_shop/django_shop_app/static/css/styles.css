@@ -83,14 +83,13 @@ li, button {
   margin: 25px 0;
 }
 
-.comment-meta {
+.rating-meta {
   color: lightgrey;
   font-size: 0.65em;
 }
 
-.comment {
-  color: darkgrey;
-  font-size: 0.85em;
+.wrapper {
+  margin: 10px;
 }
 
 nav ul {

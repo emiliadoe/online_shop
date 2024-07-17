@@ -58,7 +58,7 @@
     <h2>Bewertungen</h2>
 
     {% for rating in ratings_on_the_product %}
-        <div>
+        <div class="wrapper">
             <p class="rating-meta">{{ rating.user.username }} on {{ rating.timestamp }}</p>
             <p class="rating">{{ rating.text }}</p>
             <p class="rating">Bewertung: {{ rating.rating }} / 5</p>
@@ -84,7 +84,7 @@
     <form method="POST">
         {% csrf_token %}
         {{ rating_form.as_p }}
-        <button type="submit">Add Rating</button>
+        <button type="submit" name="rating_form">Add Rating</button>
     </form>
 
     <br>

@@ -62,11 +62,9 @@ def product_detail(request, **kwargs):
             rating_form.instance.product = current_product
             if rating_form.is_valid():
                 rating_form.save()
-                return redirect('product-detail', pk=product_id)
             else:
                 print(rating_form.errors)
-    else:
-        rating_form = RatingForm()
+
 
     ratings = Rating.objects.filter(product_id=current_product).annotate(
         helpful_count=Count('reviewvote', filter=Q(reviewvote__vote_type='helpful')),
@@ -76,10 +74,12 @@ def product_detail(request, **kwargs):
     context = {
         'single_product': current_product,
         'ratings_on_the_product': ratings,
-        'rating_form': rating_form
+        'rating_form': RatingForm()
     }
 
     return render(request, 'product-detail.html', context)
+
+
 
 def vote_review(request, rating_id, vote_type):
     rating = get_object_or_404(Rating, id=rating_id)
@@ -187,22 +187,14 @@ def product_search(request):
 
         search_title = request.POST['title']
         search_description = request.POST['description']
-        # search_rating = request.POST['rating']
-        # searched_rating = int(search_rating) if search_rating else 0
-
+        search_rating = request.POST['rating']
+        searched_rating = int(search_rating) if search_rating else 0
 
         products_found = Product.objects.filter(
             Q(title__contains=search_title)
             & Q(description__contains=search_description)
-            # & Q(ratings__gte=searched_rating)
+            & Q(ratings__gte=searched_rating)
         )
-
-        # alternative:
-        # housings_found = (
-        #         HolidayHousing.objects.filter(title__contains=search_string_title)
-        #         & HolidayHousing.objects.filter(specials__contains=search_string_specials)
-        #         & HolidayHousing.objects.filter(rooms__gte=searched_rooms)
-        # )
 
         form_in_function_based_view = SearchForm()
 
